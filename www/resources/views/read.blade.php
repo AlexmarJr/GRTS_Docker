@@ -11,6 +11,7 @@
 
 @if(isset($modal))
 <script>
+    // Caso exista a variavel $modal é por que o botão de editar endereço foi acionando, ativando o modal para visualizar/editar os dados
     $(document).ready(function(){
     $('#store_company').modal({backdrop: 'static', keyboard: false});
     $('#store_company .close').css('display', 'none');
@@ -38,7 +39,8 @@
             <a class="btn btn-success" type="button" data-toggle="modal" data-backdrop="static" data-target="#store_company">Novo Endereço</a>
         </div>
     </div>
-    <hr>
+
+<hr>
 
     <div class="row" style="margin: 10px">
         <div class="col-sm-12">
@@ -72,11 +74,10 @@
         </div>
     
     </div>
-    </br>
+</br>
     <button class="btn btn-warning" type="submit" >Editar Dados</button>
     <hr>
 </form>
-
 
     <table id="example" class="display" style="width:100%">
         <thead>

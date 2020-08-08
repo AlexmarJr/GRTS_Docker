@@ -17,7 +17,6 @@
             <button type="button" class="btn btn-success" style="padding: 15px; margin-top: 15px" data-toggle="modal" data-target="#store_company">Nova Empresa</button>
         </div>
       
-         
         <div class="col">
             <h2 style="margin-top: 15px;" >Empresas</h2>
         </div>
@@ -63,7 +62,7 @@
 </div>
 
 
-<!-- Modal de Adicionar Empresa e Endereço--> 
+<!-- Modal de Adicionar Empresa e Endereço Principal--> 
 
 <div class="modal fade store_company-lg" id="store_company" tabindex="-1" role="dialog" aria-labelledby="storage_modal" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -141,8 +140,7 @@
                         <input class="form-control" name="state" id="uf" placeholder="Bahia" type="text" required>
                     </div>
                 </div>
-
-
+                
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                     <button type="submit" class="btn btn-success">salvar</button>
@@ -157,72 +155,71 @@
 </form>
 
 <script>
-        $('#example').DataTable();
+    $('#example').DataTable();
 
+    $(document).ready(function() {
 
-        $(document).ready(function() {
-
-            function limpa_formulário_cep() {
-                // Limpa valores do formulário de cep.
-                $("#rua").val("");
-                $("#bairro").val("");
-                $("#cidade").val("");
-                $("#uf").val("");
-                $("#ibge").val("");
-            }
+    function limpa_formulário_cep() {
+        // Limpa valores do formulário de cep.
+        $("#rua").val("");
+        $("#bairro").val("");
+        $("#cidade").val("");
+        $("#uf").val("");
+        $("#ibge").val("");
+        }
             
-            //Quando o campo cep perde o foco.
-            $("#cep").blur(function() {
+        //Quando o campo cep perde o foco.
+        $("#cep").blur(function() {
 
-                //Nova variável "cep" somente com dígitos.
-                var cep = $(this).val().replace(/\D/g, '');
+        //Nova variável "cep" somente com dígitos.
+        var cep = $(this).val().replace(/\D/g, '');
 
-                //Verifica se campo cep possui valor informado.
-                if (cep != "") {
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
 
-                    //Expressão regular para validar o CEP.
-                    var validacep = /^[0-9]{8}$/;
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
 
-                    //Valida o formato do CEP.
-                    if(validacep.test(cep)) {
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+                //Preenche os campos com "..." enquanto consulta webservice.
+                $("#rua").val("...");
+                $("#bairro").val("...");
+                $("#cidade").val("...");
+                $("#uf").val("...");
+                $("#ibge").val("...");
 
-                        //Preenche os campos com "..." enquanto consulta webservice.
-                        $("#rua").val("...");
-                        $("#bairro").val("...");
-                        $("#cidade").val("...");
-                        $("#uf").val("...");
-                        $("#ibge").val("...");
+                //Consulta o webservice viacep.com.br/
+                $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
 
-                        //Consulta o webservice viacep.com.br/
-                        $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
-
-                            if (!("erro" in dados)) {
-                                //Atualiza os campos com os valores da consulta.
-                                $("#rua").val(dados.logradouro);
-                                $("#bairro").val(dados.bairro);
-                                $("#cidade").val(dados.localidade);
-                                $("#uf").val(dados.uf);
-                                $("#ibge").val(dados.ibge);
-                            } //end if.
-                            else {
-                                //CEP pesquisado não foi encontrado.
-                                limpa_formulário_cep();
-                                alert("CEP não encontrado.");
-                            }
-                        });
+                if (!("erro" in dados)) {
+                    //Atualiza os campos com os valores da consulta.
+                    $("#rua").val(dados.logradouro);
+                    $("#bairro").val(dados.bairro);
+                    $("#cidade").val(dados.localidade);
+                    $("#uf").val(dados.uf);
+                    $("#ibge").val(dados.ibge);
                     } //end if.
-                    else {
-                        //cep é inválido.
-                        limpa_formulário_cep();
-                        alert("Formato de CEP inválido.");
-                    }
-                } //end if.
+                            
                 else {
-                    //cep sem valor, limpa formulário.
+                    //CEP pesquisado não foi encontrado.
                     limpa_formulário_cep();
+                    alert("CEP não encontrado.");
+                    }
+                });
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
                 }
-            });
+        } //end if.
+            else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+            }
         });
+    });
 
      //Função para mascara de CNPJ
      function mascaraMutuario(o,f){
